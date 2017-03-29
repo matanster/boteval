@@ -1,5 +1,5 @@
 /**
- * Interface for Java scenario authors
+ * Interface for Java scenario authors - chat idioms
  */
 
 package org.boteval.api;
@@ -9,7 +9,7 @@ import java.util.*;
 public interface ApiInterface {
 
   public void initScenario(String name);
-  public void send(String msg);
+  public void sendToBot(String msg);
   public List<Response> getResponses();
 
 }
