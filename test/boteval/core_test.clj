@@ -3,8 +3,8 @@
 (ns boteval.core-test
   (:require [clojure.test :refer :all]
             [org.boteval.core :refer :all]
-            [org.boteval.samples.scenarios :as sample-scenarios]))
+            [org.boteval.samples.scenarios :as scenarios]))
 
 (deftest a-test
   (testing "bundle1 run"
-    (sample-scenarios/sample-scenario)))
+    (scenarios/sample-scenario)))

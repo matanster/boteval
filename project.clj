@@ -9,6 +9,10 @@
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :dependencies [[org.clojure/clojure "1.8.0"]]
   :aot [org.boteval.samples.driver]
-  :profiles {:test-all
-    {:java-source-paths ["src/java-samples"]}}
+  :profiles {:java-tests-compile
+    {:java-source-paths ["src/java-test"]}}
+  :aliases {
+    "java-tests" ["do" "compile," "with-profile" "+java-tests-compile" "javac," "run" "-m" "org.boteval.javaSamples.JavaUsageTest"]
+    "all-tests" ["do" "test," "java-tests"]
+  }
   :main org.boteval.core)

@@ -4,8 +4,8 @@
    :implements [org.boteval.api.ApiInterface]
    :methods
      [
-       [initScenario [String]]
-       [send [String]]
+       [initScenario [String] void]
+       [send [String] void]
      ]))
 
 (defn initScenario [name]
