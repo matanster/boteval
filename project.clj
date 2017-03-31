@@ -14,7 +14,7 @@
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}
   :aliases {
-    "java-tests" ["do" "compile," "with-profile" "java-tests-compile" "javac," "run" "-m" "org.boteval.javaSamples.JavaUsageTest"]
+    "java-tests" ["do" "compile," "with-profile" "java-tests-compile" "javac," "run" "-m" "org.boteval.java.api.test.JavaUsageTest"]
     "all-tests" ["do" "test," "java-tests"]
   }
   :main org.boteval.core)
