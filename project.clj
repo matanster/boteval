@@ -12,7 +12,9 @@
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}
   :aliases {
-    "java-tests" ["do" "compile," "with-profile" "+java-tests-compile" "javac," "run" "-m" "org.boteval.javaSamples.JavaUsageTest"]
+    "java-tests" ["do" "compile," "with-profile" "java-tests-compile" "javac," "run" "-m" "org.boteval.javaSamples.JavaUsageTest"]
     "all-tests" ["do" "test," "java-tests"]
   }
   :main org.boteval.core)
+
+; https://github.com/technomancy/leiningen/issues/847#issuecomment-289943710

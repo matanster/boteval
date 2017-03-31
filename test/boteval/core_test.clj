@@ -1,4 +1,4 @@
-;; currently runs the samples, not testing the framework's own code
+;; currently runs the clojure samples, not testing the framework's own code
 
 (ns boteval.core-test
   (:require [clojure.test :refer :all]

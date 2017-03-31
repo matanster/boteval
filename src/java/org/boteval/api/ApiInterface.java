@@ -1,5 +1,5 @@
 /**
- * Interface for Java scenario authors - chat idioms
+ * Java interface for scenario authors - user interaction idioms
  */
 
 package org.boteval.api;
