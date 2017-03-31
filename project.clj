@@ -7,7 +7,9 @@
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
-  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [io.aviso/pretty "0.1.33"]]
+  :plugins [[io.aviso/pretty "0.1.33"]] ;pretty exceptions in leinigen and repl
   :aot [org.boteval.samples.driver]
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}

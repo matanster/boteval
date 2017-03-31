@@ -1,3 +1,5 @@
+;; a sample driver written in clojure, useful also for testing the framework
+
 (ns org.boteval.samples.driver
   (:import [org.boteval.api.ApiInterface])
   (:gen-class
@@ -8,8 +10,10 @@
        [send [String] void]
      ]))
 
-(defn initScenario [name]
-  (println "sample driver initializing" name))
+(defn initScenario [scenario-name]
+  (def ^:dynamic scenario-tree scenario-name)
+  (println "sample driver initializing" scenario-name ", context is now: " scenario-tree)
+)
 
 (defn sendToBot [message]
   (println "sample driver sending message" message))
