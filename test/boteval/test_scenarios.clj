@@ -1,19 +1,19 @@
 ;; some sample scenarios
 
 (ns boteval.test-scenarios
-  (:use [org.boteval.engine.core :as engine])
-  (:require [org.boteval.samples.driver :as driver]))
+  (:use [org.boteval.engine.core]))
 
-(defn scenario1 [context params]
-  (driver/sendToBot "Hi bot"))
+(defn scenario-1 [context params]
+  (let [driver (:driver context)]
+    (.sendToBot driver "Hi bot")))
 
-(defn scenario2 [context params]
-  (driver/sendToBot "Hi bot"))
+(defn scenario-2 [context params]
+  (let [driver (:driver context)]
+    (.sendToBot driver "What's up bot?")))
 
-(defn master-scenario1 [context params]
-  (run-scenario scenario1 "scenario1" context params)
-  (run-scenario scenario2 "scenario2" context params)
-  (println context)
+(defn master-scenario-1 [context params]
+  (run-scenario scenario-1 "scenario-1" context params)
+  (run-scenario scenario-2 "scenario-2" context params)
 )
 
 

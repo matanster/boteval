@@ -3,9 +3,13 @@
 (ns boteval.core-test
   (:require [clojure.test :refer :all])
   (:use [org.boteval.engine.core]
-        [boteval.test-scenarios]))
+        [boteval.test-scenarios]
+        [boteval.dumbot.driver]))
+
+(def head-context
+  {:scenario-hierarchy ["head"]
+   :driver driver})
 
 (deftest run
   (testing "bundle run"
-    (let [context (new-context "head")]
-    (run-scenario master-scenario1 "master" context []))))
+    (run-scenario master-scenario-1 "master-scenario-1" head-context [])))
