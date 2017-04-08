@@ -3,9 +3,9 @@
 (ns boteval.core-test
   (:require [clojure.test :refer :all]
             [org.boteval.engine.core :as engine]
-            [org.boteval.samples.scenarios :as sample-scenarios]))
+            [boteval.test-scenarios :as sample-scenarios]))
 
 (deftest run
   (testing "bundle run"
     (let [context (engine/new-context)]
-    (engine/run-scenario sample-scenarios/master-scenario1 "master" context))))
+    (engine/run-scenario sample-scenarios/master-scenario1 "master" context []))))

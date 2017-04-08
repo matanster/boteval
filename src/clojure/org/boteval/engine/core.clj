@@ -8,9 +8,11 @@
   context
 )
 
-(defn run-scenario [fn scenario-name context]
-  (binding [context (conj context scenario-name)]
-    (println "running scenario" scenario-name ", context is now: " context)
-    (fn context)
+;(def ^:dynamic context []) ; initialize to empty vec
+
+(defn run-scenario [fn scenario-name context params]
+  (let [new-context (conj context scenario-name)]
+    (println "running scenario" scenario-name ", context is now: " new-context)
+    (fn new-context params)
   )
 )
