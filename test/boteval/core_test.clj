@@ -7,5 +7,5 @@
 
 (deftest run
   (testing "bundle run"
-    (let [context (new-context)]
+    (let [context (new-context "head")]
     (run-scenario master-scenario1 "master" context []))))

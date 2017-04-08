@@ -12,6 +12,8 @@
 
 (defn master-scenario1 [context params]
   (run-scenario scenario1 "scenario1" context params)
-  (run-scenario scenario2 "scenario2" context params))
+  (run-scenario scenario2 "scenario2" context params)
+  (println context)
+)
 
 
