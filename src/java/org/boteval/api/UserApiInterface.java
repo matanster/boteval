@@ -17,7 +17,7 @@ public interface UserApiInterface {
 
   public void sendToBot(int sessionId, String msg);
 
-  public List<Response> getResponses();
+  public List<String> getReceived(int sessionId);
 
 }
 
