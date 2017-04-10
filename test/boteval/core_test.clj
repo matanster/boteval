@@ -12,4 +12,5 @@
 
 (deftest run
   (testing "bundle run"
+    (.connectToBot driver)
     (run-scenario master-scenario-1 "master-scenario-1" head-context [])))

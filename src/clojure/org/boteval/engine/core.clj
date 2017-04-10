@@ -1,3 +1,5 @@
+;;; the core of boteval's exection engine
+
 (ns org.boteval.engine.core)
 
 ;; function for obtaining new top-level context
