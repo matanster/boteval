@@ -11,9 +11,8 @@
 (def head-context
   {:scenario-hierarchy ["head"]})
 
-(init driver default-logger)
-
 (deftest run
   (testing "bundle run"
+    (init driver default-logger)
     (connectToBot)
     (run-scenario master-scenario-1 "master-scenario-1" head-context [])))
