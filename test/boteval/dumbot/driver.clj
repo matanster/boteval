@@ -19,7 +19,7 @@
       (swap! sessions (fn [sessions] (update sessions session-id (fn [messages] (conj messages message)))))
     )
 
-    (connectToBot [this logger]
+    (connectToBot [this]
       (bot/connect api/receiveFromBotHandler)) ;dumbot is a special dumb bot, it writes directly to our callback but realy bots won't
 
     (openBotSession [this]

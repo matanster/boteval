@@ -5,7 +5,7 @@
   (:use [org.boteval.engine.core]
         [org.boteval.engine.api]
         [boteval.dumbot.driver]
-        [org.boteval.logger.core]
+        [org.boteval.defaultLogger.core]
         [boteval.test-scenarios]))
 
 (deftest run

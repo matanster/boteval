@@ -16,7 +16,7 @@
       nil)
 
     (defn connectToBot []
-      (. driver connectToBot receiveFromBotHandler))
+      (. driver connectToBot))
 
     (defn openBotSession []
       (. driver openBotSession))
@@ -27,7 +27,7 @@
     (defn getReceived [session-id]
       (. driver getReceived session-id))
 
-    (def ^:dynamic scenario-hierarchy ["head"]) ;; this var is dynamic for the sake of the stack discipline (https://clojure.org/reference/vars)
+    (def ^:dynamic ^:private scenario-hierarchy ["head"]) ;; this var is dynamic for the sake of the stack discipline (https://clojure.org/reference/vars)
 
     nil
 )

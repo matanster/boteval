@@ -5,7 +5,7 @@
 ;; TODO: add time & message quantity buffering for proper performance
 ;; TODO: handle draining the buffer on program exit too
 
-(ns org.boteval.logger.core
+(ns org.boteval.defaultLogger.core
   (:require [org.boteval.loggerInterface :refer [Logger]]))
 
 ; a logger
