@@ -1,26 +1,30 @@
-;; implementation of a driver, for dumbot. a driver bridges between scenario code
-;; and a particular bot implementation, by weaving bot-specific communication within
-;; an implementation of the UserApiInterface facade used by scenario authors.
+;; weaving a bot-specific driver into the runtime context
 
-(ns org.boteval.engine.api)
+(ns org.boteval.engine.api
+  (:require [org.boteval.driverInterface :refer [Driver]])  ; the driver interface
+  (:require [org.boteval.loggerInterface :refer [Logger]])) ; the logger interface
 
-(defn init [driver logger]
+(defn init
+  [driver logger]
+  {:pre [(satisfies? Driver driver)
+         (satisfies? Logger logger)]}
 
     (defn receiveFromBotHandler [session-id bot-message]
       (. logger log bot-message)
+      (. driver receiveFromBot session-id bot-message)
       nil)
 
     (defn connectToBot []
       (. driver connectToBot receiveFromBotHandler))
 
     (defn openBotSession []
-      (. openBotSession driver))
+      (. driver openBotSession))
 
     (defn sendToBot [session-id message]
-      (. sendToBot driver session-id message))
+      (. driver sendToBot session-id message))
 
     (defn getReceived [session-id]
-      (. getReceived driver session-id))
+      (. driver getReceived session-id))
 
     nil
 )

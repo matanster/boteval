@@ -9,8 +9,7 @@
         [boteval.test-scenarios]))
 
 (def head-context
-  {:scenario-hierarchy ["head"]
-   :driver driver})
+  {:scenario-hierarchy ["head"]})
 
 (init driver default-logger)
 
