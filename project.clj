@@ -10,7 +10,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [io.aviso/pretty "0.1.33"]]
   :plugins [[io.aviso/pretty "0.1.33"]] ;pretty exceptions in leinigen and repl
-  :aot [org.boteval.samples.driver]
+  :aot []
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}
   :aliases {

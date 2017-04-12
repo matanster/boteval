@@ -3,25 +3,28 @@
 ;; an implementation of the UserApiInterface facade used by scenario authors.
 
 (ns boteval.dumbot.driver
-  (:import [org.boteval.api UserApiInterface]) ; api for the scenario writer
+  (:require [org.boteval.driverInterface :refer [Interface]]) ; api for the scenario writer
   (:require [boteval.dumbot.core :as bot]))    ; dubmot functions
 
 ; sessions vector
 (def sessions (atom (sorted-map)))
 
-; callback for bot dispatched message handling
-(defn receiveFromBot [session-id message]
-  (println "message received from bot" message "for session-id" session-id)
-  (swap! sessions (fn [sessions] (update sessions session-id (fn [messages] (conj messages message)))))
-)
-
 ; the driver
 (def driver
   "a driver for our test bot"
-  (reify UserApiInterface
+  (reify Interface
 
-    (connectToBot [this]
-      (bot/connect receiveFromBot))
+    (connectToBot [this upstream-handler]
+
+      ; callback receiving messages from the bot.
+      ; note that since dumbot is an in-process bot, a callback is directly supplied to it. but this would not be the case for real bots.
+      (defn receiveFromBotCallback [session-id message]
+        (println "message received from bot" message "for session-id" session-id)
+        (upstream-handler session-id message)
+        (swap! sessions (fn [sessions] (update sessions session-id (fn [messages] (conj messages message)))))
+      )
+
+      (bot/connect receiveFromBotCallback))
 
     (openBotSession [this]
       (let [session-id (bot/open-session)]
