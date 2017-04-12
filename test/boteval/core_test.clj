@@ -2,8 +2,7 @@
 
 (ns boteval.core-test
   (:require [clojure.test :refer :all])
-  (:use [org.boteval.engine.core]
-        [org.boteval.engine.api]
+  (:use [org.boteval.engine.api]
         [boteval.dumbot.driver]
         [org.boteval.defaultLogger.core]
         [boteval.test-scenarios]))
