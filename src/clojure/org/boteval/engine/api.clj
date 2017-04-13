@@ -2,7 +2,8 @@
 
 (ns org.boteval.engine.api
   (:require [org.boteval.driverInterface :refer [Driver]])  ; the driver interface
-  (:require [org.boteval.loggerInterface :refer [Logger]])) ; the logger interface
+  (:require [org.boteval.loggerInterface :refer [Logger]])
+  (:gen-class)) ; the logger interface
 
 ;; function that initializes the api with a driver and logger
 (defn init

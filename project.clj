@@ -10,11 +10,11 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [io.aviso/pretty "0.1.33"]]
   :plugins [[io.aviso/pretty "0.1.33"]] ;pretty exceptions in leinigen and repl
-  :aot []
+  :aot [org.boteval.engine.api]
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}
   :aliases {
-    "java-tests" ["do" "compile," "with-profile" "java-tests-compile" "javac," "run" "-m" "org.boteval.java.api.test.JavaUsageTest"]
+    "java-tests" ["do" "compile," "with-profile" "java-tests-compile" "javac," "run" "-m" "org.boteval.java.samples.ScenarioRunner"]
     "all-tests" ["do" "test," "java-tests"]
   }
   :main org.boteval.core)
