@@ -29,7 +29,7 @@
     "java-tests" ["do" "compile," "with-profile" "java-tests-compile" "javac," "run" "-m" "org.boteval.java.samples.ScenarioRunner"]
     "all-tests" ["do" "test," "java-tests"]
   }
-  :main org.boteval.core)
+  :main org.boteval.main)
 
 ;; tips towards the interweaving of dependant java and clojure compilation phases:
 ;; https://github.com/technomancy/leiningen/issues/847#issuecomment-289943710
