@@ -8,10 +8,12 @@
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [clj-time "0.13.0"]        ; https://github.com/clj-time/clj-time
                  [io.aviso/pretty "0.1.33"] ; pretty exceptions in leinigen
                  [honeysql "0.8.2"]         ; sort of a query
-                 [mysql/mysql-connector-java "5.1.41"] ; mysql jdbc driver
-                 [hikari-cp "1.7.5"]]       ; jdbc connection pooling, if we'll need it
+                 [mysql/mysql-connector-java "5.1.41"]  ; mysql jdbc driver
+                 [org.clojure/java.jdbc "0.7.0-alpha3"] ; clojure jdbc
+                 [hikari-cp "1.7.5"]]       ; jdbc connection pooling, if we'll need it (https://github.com/tomekw/hikari-cp)
   :plugins [[io.aviso/pretty "0.1.33"]]
   :aot [org.boteval.engine.api]
   :profiles {:java-tests-compile

@@ -3,7 +3,11 @@
 (ns org.boteval.engine.api
   (:require [org.boteval.driverInterface :refer [Driver]])  ; the driver interface
   (:require [org.boteval.loggerInterface :refer [Logger]])
+  (:require [clj-time.core :as time])
+  (:require [clj-time.coerce :as time-convert])
   (:gen-class)) ; the logger interface
+
+(defn now [] (time/now))
 
 ;; function that initializes the api with a driver and logger
 (defn init
@@ -12,7 +16,13 @@
          (satisfies? Logger logger)]}
 
     (defn receiveFromBotHandler [session-id bot-message]
-      (. logger log bot-message)
+      (let [message-record
+        {:text bot-message
+         :time (time-convert/to-sql-time (now))
+         :is-user false
+         :session-id session-id}]
+            (. logger log message-record))
+
       (. driver receiveFromBot session-id bot-message)
       nil)
 
@@ -23,6 +33,13 @@
       (. driver openBotSession))
 
     (defn sendToBot [session-id message]
+      (let [message-record
+        {:text message
+         :time (time-convert/to-sql-time (now))
+         :is-user true
+         :session-id session-id}]
+            (. logger log message-record))
+
       (. driver sendToBot session-id message))
 
     (defn getReceived [session-id]
