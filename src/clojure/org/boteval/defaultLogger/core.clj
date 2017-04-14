@@ -1,7 +1,7 @@
 ;;
 ;; a component logging messages sent and received to/from the target bots → into the data store
+;; we use https://github.com/jkk/honeysql for query building here.
 ;;
-;; TODO: write to mysql database
 ;; TODO: add time & message quantity buffering for proper performance
 ;; TODO: handle draining the buffer on program exit too
 
@@ -24,19 +24,33 @@
 ; a logger
 (def default-logger
   (reify Logger
-    (log [this {:keys [text is-user time session-id]}]
+    (log [this scenario-hierarchy {:keys [text is-user time session-id]}]
 
-      (let [insert (-> (insert-into :sessions) ; https://github.com/jkk/honeysql
-                       (values [{:text text
-                                 :is_user is-user
-                                 :time time
-                                 :session_id session-id}])
-                        sql/format)]
+      (let [
+        insert
+          (-> (insert-into :sessions)
+              (values [{:text text
+                        :is_user is-user
+                        :time time
+                        :session_id session-id}])
+              sql/format)]
+
         (println insert)
         (jdbc/with-db-connection [conn {:datasource datasource}]
           (jdbc/execute! conn insert)))
 
       (println "logged" text))
+
+    #_(log-scenario-start [this scenario-hierarchy start-time]
+      (let
+        [self-name (first scenario-hierarchy)
+         parent-name (nth scenario-hierarchy 1)]
+           (let [insert
+              (-> (insert-into :scenario_executions)
+              (values [{:name self-name
+                        :parent parent-name
+                        :started start-time}])
+              sql/format)])))
 
     (shutdown [this]
       (close-datasource datasource))
