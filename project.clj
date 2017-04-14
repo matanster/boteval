@@ -1,6 +1,6 @@
 (defproject boteval "0.1.0-SNAPSHOT"
   :description "the boteval framework"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/Boteval"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.0.0"
@@ -8,12 +8,12 @@
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [clj-time "0.13.0"]        ; https://github.com/clj-time/clj-time
                  [io.aviso/pretty "0.1.33"] ; pretty exceptions in leinigen
-                 [honeysql "0.8.2"]         ; sort of a query
+                 [clj-time "0.13.0"]        ; https://github.com/clj-time/clj-time
+                 [honeysql "0.8.2"]         ; sort of a query builder
                  [mysql/mysql-connector-java "5.1.41"]  ; mysql jdbc driver
                  [org.clojure/java.jdbc "0.7.0-alpha3"] ; clojure jdbc
-                 [hikari-cp "1.7.5"]]       ; jdbc connection pooling, if we'll need it (https://github.com/tomekw/hikari-cp)
+                 [hikari-cp "1.7.5"]]       ; jdbc connection pooling, if we really need it (https://github.com/tomekw/hikari-cp)
   :plugins [[io.aviso/pretty "0.1.33"]]
   :aot [org.boteval.engine.api]
   :profiles {:java-tests-compile
@@ -24,4 +24,5 @@
   }
   :main org.boteval.core)
 
-; https://github.com/technomancy/leiningen/issues/847#issuecomment-289943710
+;; tips towards the interweaving of dependant java and clojure compilation phases:
+;; https://github.com/technomancy/leiningen/issues/847#issuecomment-289943710

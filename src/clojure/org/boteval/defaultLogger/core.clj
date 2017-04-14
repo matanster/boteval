@@ -12,7 +12,7 @@
   (:require [honeysql.core :as sql])
   (:require [honeysql.helpers :refer :all]))
 
-;; a hikari connection pool definition (https://github.com/tomekw/hikari-cp/issues/53)
+;; a hikari connection pool definition
 ;; (may optimize for performance following https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)
 (def datasource
   (make-datasource {:driver-class-name "com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
