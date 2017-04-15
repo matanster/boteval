@@ -10,7 +10,7 @@
   (:require [hikari-cp.core :refer :all])
   (:require [clojure.java.jdbc :as jdbc])
   (:require [honeysql.core :as sql])
-  (:require [honeysql.helpers :refer :all]))
+  #_(:require [honeysql.helpers :refer :all]))
 
 ;; a hikari connection pool definition
 ;; (may optimize for performance following https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)
@@ -22,11 +22,11 @@
                     :useSSL            false})) ; using SSL without a trust store for server verification will flood the logs
 
 ;; a wrapper for database writing
-(defn- db-execute [builder-dsl]
-  (let [sql-statement (-> builder-dsl sql/format)]
+(defn- db-execute [sqlmap]
+  (let [sql-statement (sql/format sqlmap)]
     (println sql-statement)
-       (jdbc/with-db-connection [conn {:datasource datasource}]
-          (jdbc/execute! conn sql-statement))))
+    (jdbc/with-db-connection [conn {:datasource datasource}]
+       (jdbc/execute! conn sql-statement))))
 
 ; a logger
 (def default-logger
@@ -39,11 +39,11 @@
              (some? project-git-hash)]}
 
         (db-execute
-          (-> (insert-into :projects)
-              (values [{:name name
+          {:insert-into [:projects]
+           :values [{:name name
                      :owner owner
-                     :version_name nil ; later make this an optional argument
-                     :git_hash project-git-hash}])))
+                     :version "none" ; later make this an optional argument
+                     :git_hash project-git-hash}]})
 
         (def project-git-hash project-git-hash))
 
@@ -51,12 +51,12 @@
       [this scenario-hierarchy {:keys [text is-user time session-id]}]
 
       (db-execute
-         (-> (insert-into :exchanges)
-             (values [{:text text
+        {:insert-into [:exchanges]
+         :values [{:text text
                    :is_user is-user
                    :exchange_time time
                    :session_id session-id
-                   :scenario_execution_id 0}])))
+                   :scenario_execution_id 0}]})
 
       (println "logged" text))
 

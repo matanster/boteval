@@ -49,7 +49,7 @@ CREATE TABLE `boteval`.`scenarios` (
 CREATE TABLE `boteval`.`projects` (
   `name` CHAR(128) NOT NULL COMMENT 'top level identification of a project',
   `owner` CHAR(64) NOT NULL COMMENT 'further identifying a project',
-  `version name` CHAR(64) NULL COMMENT 'optionally further identifying a project',
+  `version_name` CHAR(64) NULL COMMENT 'optionally further identifying a project',
   `git_hash` CHAR(64) NOT NULL,
   `id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),

@@ -19,7 +19,7 @@
          (satisfies? Driver driver)
          (satisfies? Logger logger)]}
 
-    (def self-hash
+    (def self-git-hash
       ; http://stackoverflow.com/a/29528037/1509695
       ; http://stackoverflow.com/questions/38934681/how-to-get-timestamp-neutral-git-hash-from-a-given-commit-hash
       ; http://dev.clojure.org/jira/browse/CLJ-124
@@ -29,7 +29,9 @@
             (str/trimr git-hash)
             (throw (Exception. "failed to get self git hash ― are you running the framework without git installed?")))))
 
-    (println "starting up.. self-hash is" self-hash) ; move to plain logger
+    (println "starting up.. self-hash is" self-git-hash) ; move to plain logger
+
+    (. logger init (assoc project-meta :project-git-hash self-git-hash))
 
     ;; this var is dynamic for the sake of the stack discipline (https://clojure.org/reference/vars) which
     ;; perfectly matches the notion of `run-scenario` keeping track of the scenario hierarchy
@@ -41,7 +43,7 @@
          :time (time-convert/to-sql-time (now))
          :is-user false
          :session-id session-id}]
-            (. logger log self-hash scenario-hierarchy message-record))
+            (. logger log scenario-hierarchy message-record))
 
       (. driver receiveFromBot session-id bot-message)
       nil)
@@ -58,7 +60,7 @@
          :time (time-convert/to-sql-time (now))
          :is-user true
          :session-id session-id}]
-            (. logger log self-hash scenario-hierarchy message-record))
+            (. logger log scenario-hierarchy message-record))
 
       (. driver sendToBot session-id message))
 
