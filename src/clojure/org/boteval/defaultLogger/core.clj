@@ -24,7 +24,7 @@
 ; a logger
 (def default-logger
   (reify Logger
-    (log [this scenario-hierarchy {:keys [text is-user time session-id]}]
+    (log [this self-hash scenario-hierarchy {:keys [text is-user time session-id]}]
 
       (let [
         insert

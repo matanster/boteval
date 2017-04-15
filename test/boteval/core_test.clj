@@ -9,6 +9,9 @@
 
 (deftest run
   (testing "bundle run"
-    (init driver default-logger)
+    (init
+      {:name "boteval-self-test"
+       :owner "matan"}
+       driver default-logger)
     (connectToBot)
     (run-scenario master-scenario-1 "master-scenario-1" [])))
