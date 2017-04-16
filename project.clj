@@ -9,6 +9,8 @@
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
 
+  :test-paths ["test" "src/clojure"] ; for picking up unit tests from regular source files not only the tests directory
+
   :dependencies [[org.clojure/clojure "1.8.0"]
 
                  [io.aviso/pretty "0.1.33"] ; pretty exceptions in leinigen
@@ -21,7 +23,11 @@
                  [org.clojure/java.jdbc "0.7.0-alpha3"] ; clojure jdbc, needed for the rest of them libraries
                  [hikari-cp "1.7.5"]]       ; jdbc connection pooling, if we really need it (https://github.com/tomekw/hikari-cp)
 
-  :plugins [[io.aviso/pretty "0.1.33"]]
+  :plugins [[io.aviso/pretty "0.1.33"]
+            [lein-codox "0.10.3"]]
+
+  :codox {:metadata {:doc/format :markdown}} ; treat docstrings as codox extended markdown (https://github.com/weavejester/codox/blob/master/example/src/clojure/codox/markdown.clj)
+
   :aot [org.boteval.engine.api]
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}

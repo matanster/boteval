@@ -5,8 +5,8 @@
 
   (init [_ project-meta])
 
-  (log [_ scenario-hierarchy message-record])
+  (log-scenario-execution-start [_ scenario-name scenario-hierarchy start-time])
 
-  #_(log-scenario-execution-start [_ scenario-hierarchy start-time])
+  (log [_ scenario-hierarchy message-record])
 
   (shutdown [_]))

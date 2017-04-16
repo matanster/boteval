@@ -12,21 +12,7 @@
   (:require [honeysql.core :as sql])
   (:require [honeysql.helpers :refer :all]))
 
-;; a hikari connection pool definition
-;; (may optimize for performance following https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)
-(def ^:private datasource
-  (make-datasource {:driver-class-name "com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
-                    :jdbc-url          "jdbc:mysql://localhost/boteval"
-                    :username          "boteval"
-                    :password          "boteval234%^&"
-                    :useSSL            false})) ; using SSL without a trust store for server verification will flood the logs
-
-;; a wrapper for database writing
-(defn- db-execute [builder-dsl]
-  (let [sql-statement (-> builder-dsl sql/format)]
-    (println sql-statement)
-       (jdbc/with-db-connection [conn {:datasource datasource}]
-          (jdbc/execute! conn sql-statement))))
+(load "helpers")
 
 ; a logger
 (def default-logger
@@ -38,19 +24,40 @@
              (some? owner)
              (some? project-git-hash)]}
 
-        (db-execute
-          (-> (insert-into :projects)
-              (values [{:name name
-                     :owner owner
-                     :version_name nil ; later make this an optional argument
-                     :git_hash project-git-hash}])))
+        (def project-id
+          (if-let [project-id
+            (:id (first
+              (let [sql-statement (-> (select :id) (from :projects) (where [:= :name name] [:= :owner owner]) sql/format)]
+                (jdbc/with-db-connection [connection {:datasource datasource}]
+                   (jdbc/query connection sql-statement)))))]
+
+              project-id
+
+              (do
+                (println "registering an id for the project")
+                (first (db-execute
+                  (-> (insert-into :projects)
+                      (values [{:name name
+                                :owner owner
+                                :version_name nil ; later make this an optional argument
+                                ;:git_hash project-git-hash
+                                }])))))))
+
+        #_(def project-scenarios
+          (let [sql-statement (-> (select :id) (from :scenarios) (where [:= :project_id project-id]) sql/format)]
+            (jdbc/with-db-connection [connection {:datasource datasource}]
+               (jdbc/query connection sql-statement))))
+
+        #_(println project-scenarios)
+
+        (println "project id is " project-id)
 
         (def project-git-hash project-git-hash))
 
     (log
       [this scenario-hierarchy {:keys [text is-user time session-id]}]
 
-      (db-execute
+      #_(db-execute
          (-> (insert-into :exchanges)
              (values [{:text text
                    :is_user is-user
@@ -60,16 +67,22 @@
 
       (println "logged" text))
 
-    #_(log-scenario-execution-start [this scenario-hierarchy start-time]
-      (let
-        [self-name (first scenario-hierarchy)
-         parent-name (nth scenario-hierarchy 1)]
-           (let [insert
-              (-> (insert-into :scenario_executions)
-              (values [{:name self-name
-                        :parent parent-name
-                        :started start-time}])
-              sql/format)])))
+
+    (log-scenario-execution-start [this scenario-name scenario-hierarchy start-time]
+       (let [scenario-id (get-scenario-id project-id scenario-name)]
+         (println scenario-id))
+
+       #_(let
+          [self-name (first scenario-hierarchy)
+           parent-name (nth scenario-hierarchy 1)]
+
+          (db-execute
+             (-> (insert-into :scenario_executions)
+                 (values [{:scenario_id
+                           :parent_id
+                           :started start-time
+                           :ended nil}])))))
+
 
     (shutdown [this]
       (close-datasource datasource))

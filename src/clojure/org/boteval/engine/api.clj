@@ -1,8 +1,8 @@
 ;; weaving a bot-specific driver into the runtime context
 
 (ns org.boteval.engine.api
-  (:require [org.boteval.driverInterface :refer [Driver]])  ; the driver interface
-  (:require [org.boteval.loggerInterface :refer [Logger]])
+  (:require [org.boteval.driverInterface :refer [Driver]]) ; the driver interface
+  (:require [org.boteval.loggerInterface :refer [Logger]]) ; the logger interface
   (:require [clj-time.core :as time])
   (:require [clj-time.coerce :as time-convert])
   (:require [clojure.java.shell :as shell])
@@ -71,13 +71,12 @@
     (defn run-scenario [fn scenario-name params]
       (println scenario-hierarchy)
       (binding [scenario-hierarchy (conj scenario-hierarchy scenario-name)]
-        #_(. logger log-scenario-start scenario-hierarchy (time-convert/to-sql-time (now)))
+        (. logger log-scenario-execution-start scenario-name scenario-hierarchy (time-convert/to-sql-time (now)))
         (println "running scenario" scenario-name "scenario hierarchy being" scenario-hierarchy)
         (fn params)
         (println scenario-hierarchy "finished")
       )
     )
-
 
     nil
 )
