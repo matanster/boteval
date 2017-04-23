@@ -35,7 +35,7 @@
 
     ;; this var is dynamic for the sake of the stack discipline (https://clojure.org/reference/vars) which
     ;; perfectly matches the notion of `run-scenario` keeping track of the scenario hierarchy
-    (def ^:dynamic ^:private scenario-hierarchy '("root"))
+    (def ^:dynamic ^:private scenario-hierarchy '())
 
     (defn receiveFromBotHandler [session-id bot-message]
       (let [message-record
@@ -69,10 +69,9 @@
 
     ;; the function that runs a scenario
     (defn run-scenario [fn scenario-name params]
-      (println scenario-hierarchy)
       (binding [scenario-hierarchy (conj scenario-hierarchy scenario-name)]
         (. logger log-scenario-execution-start scenario-name scenario-hierarchy (time-convert/to-sql-time (now)))
-        (println "running scenario" scenario-name "scenario hierarchy being" scenario-hierarchy)
+        (println scenario-name "starting")
         (fn params)
         (println scenario-hierarchy "finished")
       )
@@ -80,4 +79,3 @@
 
     nil
 )
-

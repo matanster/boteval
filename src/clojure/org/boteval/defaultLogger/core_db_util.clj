@@ -1,0 +1,29 @@
+(ns org.boteval.defaultLogger.core
+  " helper extension for org.boteval.defaultLogger.core ―
+    exposes a function that gets-or-sets an id for a given scenario without much database access "
+
+  (:use clojure.test)
+  (:require [hikari-cp.core :refer :all])
+  (:require [clojure.java.jdbc :as jdbc])
+  (:require [honeysql.core :as sql])
+  (:require [honeysql.helpers :refer :all]))
+
+;; a hikari connection pool definition
+;; (may optimize for performance following https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)
+(def ^:private datasource
+  (make-datasource {:driver-class-name "com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+                    :jdbc-url          "jdbc:mysql://localhost/boteval"
+                    :username          "boteval"
+                    :password          "boteval234%^&"
+                    :useSSL            false})) ; using SSL without a trust store for server verification will flood the logs
+
+;; a wrapper for database writing
+;; if no transactional connection is provided, obtains a new one, otherwise reuses the given one
+(defn ^:private db-execute
+  ([honey-sql-map]
+     (jdbc/with-db-connection [connection {:datasource datasource}]
+        (db-execute connection honey-sql-map)))
+  ([connection honey-sql-map]
+    (let [sql-statement (sql/format honey-sql-map)]
+       (jdbc/execute! connection sql-statement))))
+

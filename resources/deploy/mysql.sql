@@ -28,9 +28,9 @@ CREATE TABLE `boteval`.`exchanges` (
 
 /* scenario executions */
 CREATE TABLE `boteval`.`scenario_executions` (
-  `scenario_id` BIGINT NOT NULL,
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `parent_id` BIGINT NULL COMMENT 'null would mean no parent',
+  `scenario_id` BIGINT NOT NULL COMMENT 'connects to a scenario id',
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'execution id',
+  `parent_id` BIGINT NULL COMMENT 'execution id of parent executor (null would mean no parent, i.e. a top level execution)',
   `started` DATETIME(6) NOT NULL,
   `ended` DATETIME(6) NULL COMMENT 'can be null while the execution has not yet ended',
   PRIMARY KEY (`id`),
@@ -66,7 +66,7 @@ ADD CONSTRAINT `fk_exchanges_1`
 
 ALTER TABLE `boteval`.`scenario_executions`
 ADD CONSTRAINT `fk_scenario_executions_1`
-  FOREIGN KEY (`id`)
+  FOREIGN KEY (`scenario_id`)
   REFERENCES `boteval`.`scenarios` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;

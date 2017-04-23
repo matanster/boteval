@@ -18,5 +18,5 @@
   (reply session-id message))
 
 (defn receive [session-id message]
-  (println "received message " message "from session id" session-id)
+  #_(println "received message " message "from session id" session-id)
   (send-to-client session-id "got your message, no comments"))
