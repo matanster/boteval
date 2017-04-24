@@ -35,7 +35,7 @@
 
     ;; this var is dynamic for the sake of the stack discipline (https://clojure.org/reference/vars) which
     ;; perfectly matches the notion of `run-scenario` keeping track of the scenario hierarchy
-    (def ^:dynamic ^:private scenario-hierarchy '())
+    (def ^:dynamic ^:private scenario-execution-hierarchy '())
 
     (defn receiveFromBotHandler [session-id bot-message]
       (let [message-record
@@ -43,7 +43,7 @@
          :time (time-convert/to-sql-time (now))
          :is-user false
          :session-id session-id}]
-            (. logger log scenario-hierarchy message-record))
+            (. logger log scenario-execution-hierarchy message-record))
 
       (. driver receiveFromBot session-id bot-message)
       nil)
@@ -60,7 +60,7 @@
          :time (time-convert/to-sql-time (now))
          :is-user true
          :session-id session-id}]
-            (. logger log scenario-hierarchy message-record))
+            (. logger log scenario-execution-hierarchy message-record))
 
       (. driver sendToBot session-id message))
 
@@ -69,13 +69,14 @@
 
     ;; the function that runs a scenario
     (defn run-scenario [fn scenario-name params]
-      (binding [scenario-hierarchy (conj scenario-hierarchy scenario-name)]
-        (. logger log-scenario-execution-start scenario-name scenario-hierarchy (time-convert/to-sql-time (now)))
+        (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (time-convert/to-sql-time (now)))]
+        (println "scenario-execution-id" scenario-execution-id)
         (println scenario-name "starting")
-        (fn params)
-        (println scenario-hierarchy "finished")
-      )
-    )
+        (binding [scenario-execution-hierarchy
+           (conj scenario-execution-hierarchy {:scenario-name scenario-name :scenario-execution-id scenario-execution-id})]
+               (println scenario-execution-hierarchy)
+               (fn params))
+        (println scenario-execution-hierarchy "finished")))
 
     nil
 )

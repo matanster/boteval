@@ -54,7 +54,7 @@
 
     ;; the bot-exchange logging method (messages sent and received from the bot by a bot driver)
     (log
-      [this scenario-hierarchy {:keys [text is-user time session-id]}]
+      [this scenario-execution-hierarchy {:keys [text is-user time session-id]}]
 
       #_(db-execute
          (-> (insert-into :exchanges)
@@ -66,21 +66,16 @@
 
     ;; scenario execution start method
     (log-scenario-execution-start
-      [this scenario-name scenario-hierarchy start-time]
-      {:pre (= scenario-name (first scenario-hierarchy))}
+      [this scenario-name scenario-execution-hierarchy start-time]
 
       (let [scenario-id (get-scenario-id project-id scenario-name)]
-        (println scenario-id)
-        (let [parent-name (second scenario-hierarchy)]
-           (let [insert-payload
-              {:scenario_id scenario-id
-               :parent_id (if parent-name (get-scenario-id project-id parent-name) nil)
-               ;:parent_id (if parent-name (get-scenario-id project-id parent-name) nil)
-               :started start-time
-               :ended nil}]
-                  (db-execute
-                    (-> (insert-into :scenario_executions)
-                        (values [insert-payload])))))))
+        (let [parent-scenario-execution-id (:scenario-execution-id (first scenario-execution-hierarchy))]
+           (insert-and-get-id
+             :scenario_executions
+             {:scenario_id scenario-id
+              :parent_id parent-scenario-execution-id
+              :started start-time
+              :ended nil}))))
 
     ;; shutdown method
     (shutdown [this]

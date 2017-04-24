@@ -23,7 +23,15 @@
   ([honey-sql-map]
      (jdbc/with-db-connection [connection {:datasource datasource}]
         (db-execute connection honey-sql-map)))
+
   ([connection honey-sql-map]
     (let [sql-statement (sql/format honey-sql-map)]
        (jdbc/execute! connection sql-statement))))
 
+;; insert one row and get its database assigned auto-incremented key
+(defn ^:private insert-and-get-id
+  [table-name row-map]
+    (let [honey-sql (-> (insert-into table-name) (values [row-map]) sql/format)]
+       (jdbc/with-db-connection [connection {:datasource datasource}]
+         (jdbc/execute! connection honey-sql)
+         (:id (first (jdbc/query connection "select last_insert_id() id"))))))
