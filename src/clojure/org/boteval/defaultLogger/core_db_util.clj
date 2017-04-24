@@ -22,6 +22,7 @@
 (defn ^:private db-execute
   ([honey-sql-map]
      (jdbc/with-db-connection [connection {:datasource datasource}]
+        (println honey-sql-map)
         (db-execute connection honey-sql-map)))
 
   ([connection honey-sql-map]
@@ -31,7 +32,9 @@
 ;; insert one row and get its database assigned auto-incremented key
 (defn ^:private insert-and-get-id
   [table-name row-map]
+  {:pre (map? row-map)}
+    (println (-> (insert-into table-name) (values [row-map]) sql/format))
     (let [honey-sql (-> (insert-into table-name) (values [row-map]) sql/format)]
        (jdbc/with-db-connection [connection {:datasource datasource}]
          (jdbc/execute! connection honey-sql)
-         (:id (first (jdbc/query connection "select last_insert_id() id"))))))
+         (:id (first (jdbc/query connection "select last_insert_id() id")))))) ;this is mysql specific

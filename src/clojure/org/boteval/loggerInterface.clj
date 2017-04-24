@@ -7,6 +7,8 @@
 
   (log-scenario-execution-start [_ scenario-name scenario-hierarchy start-time])
 
+  (log-scenario-execution-end [_ scenario-execution-id end-time])
+
   (log [_ scenario-hierarchy message-record])
 
   (shutdown [_]))

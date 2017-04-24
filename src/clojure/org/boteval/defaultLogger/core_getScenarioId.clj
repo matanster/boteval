@@ -12,29 +12,24 @@
 
 (defn ^:private get-id-from-db [project-id scenario-name]
 
-  ;; helper function for querying for an id
-  (letfn [(from-db [connection]
+  (letfn [(query-for-id [connection]
+     "query for the id of our project"
             (:id (first
                (let [sql-statement (-> (select :id) (from :scenarios) (where [:= :project_id project-id] [:= :name scenario-name]) sql/format)]
                   (jdbc/query connection sql-statement)))))]
 
   (jdbc/with-db-connection [connection {:datasource datasource}]
-    (if-let [scenario-id (from-db connection)]
+    (if-let [scenario-id (query-for-id connection)]
       scenario-id
 
       (do
         ; add to the database, get the auto-incremented key, and update the index mirror with it
-        ; we avoid dbms specific ways of getting the auto-increment, to remain dbms neutral.
         (println "adding scenario " scenario-name "to database")
-        (let [scenario-id (do (db-execute (-> (insert-into :scenarios)
-                                              (values [{:name scenario-name
-                                                        :project_id project-id}])))
-                              (from-db connection))]
+        (let [scenario-id
+           (insert-and-get-id :scenarios {:name scenario-name :project_id project-id})]
 
-
-          (println scenario-id)
-          (swap! index-mirror (fn [current] (assoc current scenario-name scenario-id))) ; update the index mirror
-          scenario-id))))))
+           (swap! index-mirror (fn [current] (assoc current scenario-name scenario-id))) ; update the index mirror
+           scenario-id))))))
 
 
 (defn get-scenario-id [project-id scenario-name]

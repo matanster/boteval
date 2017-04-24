@@ -21,7 +21,7 @@ USE boteval;
 
 CREATE TABLE `boteval`.`exchanges` (
   `text` VARCHAR(2048) NULL,
-  `is_user` TINYINT NOT NULL,
+  `is_user` TINYINT NOT NULL COMMENT 'is it a user initiated exchange? false would mean a bot initiated exchange',
   `exchange_time` DATETIME(6) NOT NULL,
   `session_id` INT NOT NULL COMMENT 'session id assigned by the bot driver',
   `scenario_execution_id` BIGINT NOT NULL);

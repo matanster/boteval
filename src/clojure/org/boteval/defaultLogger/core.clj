@@ -56,13 +56,13 @@
     (log
       [this scenario-execution-hierarchy {:keys [text is-user time session-id]}]
 
-      #_(db-execute
+      (db-execute
          (-> (insert-into :exchanges)
              (values [{:text text
-                   :is_user is-user
-                   :exchange_time time
-                   :session_id session-id
-                   :scenario_execution_id 0}]))))
+                       :is_user is-user
+                       :exchange_time time
+                       :session_id session-id
+                       :scenario_execution_id (:scenario-execution-id (first scenario-execution-hierarchy))}]))))
 
     ;; scenario execution start method
     (log-scenario-execution-start
@@ -76,6 +76,14 @@
               :parent_id parent-scenario-execution-id
               :started start-time
               :ended nil}))))
+
+    ;; scenario execution end method
+    (log-scenario-execution-end
+      [this scenario-execution-id end-time]
+      (db-execute
+         (-> (update :scenario_executions)
+             (where [:= :id scenario-execution-id])
+             (sset {:ended end-time}))))
 
     ;; shutdown method
     (shutdown [this]

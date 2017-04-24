@@ -9,7 +9,16 @@
   (:require [clojure.string :as str])
   (:gen-class))
 
-(defn now [] (time/now))
+(defn now []
+  "get the current time. this only gives millisecond precision, to get micro or nano precision,
+   need to use Java 8's new time object http://stackoverflow.com/a/33472641/1509695 rather than
+   clojure's joda-time wrappar"
+  (time/now))
+
+(defn sql-time []
+  "dbms friendly current time"
+  (time-convert/to-sql-time (now)))
+
 
 ;; function that initializes the api with a driver and logger
 (defn init
@@ -38,12 +47,11 @@
     (def ^:dynamic ^:private scenario-execution-hierarchy '())
 
     (defn receiveFromBotHandler [session-id bot-message]
-      (let [message-record
-        {:text bot-message
-         :time (time-convert/to-sql-time (now))
-         :is-user false
-         :session-id session-id}]
-            (. logger log scenario-execution-hierarchy message-record))
+      (. logger log scenario-execution-hierarchy
+         {:text bot-message
+          :time (sql-time)
+          :is-user false
+          :session-id session-id})
 
       (. driver receiveFromBot session-id bot-message)
       nil)
@@ -55,12 +63,11 @@
       (. driver openBotSession))
 
     (defn sendToBot [session-id message]
-      (let [message-record
-        {:text message
-         :time (time-convert/to-sql-time (now))
-         :is-user true
-         :session-id session-id}]
-            (. logger log scenario-execution-hierarchy message-record))
+      (. logger log scenario-execution-hierarchy
+         {:text message
+          :time (sql-time)
+          :is-user true
+          :session-id session-id})
 
       (. driver sendToBot session-id message))
 
@@ -69,14 +76,14 @@
 
     ;; the function that runs a scenario
     (defn run-scenario [fn scenario-name params]
-        (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (time-convert/to-sql-time (now)))]
-        (println "scenario-execution-id" scenario-execution-id)
+      (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time))]
         (println scenario-name "starting")
         (binding [scenario-execution-hierarchy
            (conj scenario-execution-hierarchy {:scenario-name scenario-name :scenario-execution-id scenario-execution-id})]
                (println scenario-execution-hierarchy)
                (fn params))
-        (println scenario-execution-hierarchy "finished")))
+        (println scenario-name "finished")
+        (. logger log-scenario-execution-end scenario-execution-id (sql-time))))
 
     nil
 )
