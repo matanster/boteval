@@ -5,7 +5,8 @@
   (:use [org.boteval.engine.api]
         [boteval.dumbot.driver]
         [org.boteval.defaultLogger.core]
-        [boteval.test-scenarios]))
+        [boteval.test-scenarios]
+        [boteval.sampleEvaluators.evaluator]))
 
 (deftest run
   (testing "bundle run"

@@ -1,6 +1,6 @@
 (ns org.boteval.defaultLogger.core
 
-  " #our default logger
+  "#our default logger
 
   a component logging messages sent and received to/from the target bots → into the data store,
   the data store being mysql here, we use https://github.com/jkk/honeysql for query building.

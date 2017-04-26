@@ -17,8 +17,11 @@ FLUSH PRIVILEGES;
 
 USE boteval;
 
-/* tables */
+/**
+  scenario entities
+**/
 
+/* tables */
 CREATE TABLE `boteval`.`exchanges` (
   `text` VARCHAR(2048) NULL,
   `is_user` TINYINT NOT NULL COMMENT 'is it a user initiated exchange? false would mean a bot initiated exchange',
@@ -77,3 +80,5 @@ ADD CONSTRAINT `fk_scenarios_1`
   REFERENCES `boteval`.`projects` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+
