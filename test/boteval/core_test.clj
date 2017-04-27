@@ -8,12 +8,27 @@
         [boteval.test-scenarios]
         [boteval.sampleEvaluators.evaluator]))
 
-(deftest run
-  (testing "bundle run"
+(deftest ^:samples run
     (init
       {:name "boteval-self-test"
        :owner "matan"}
        driver default-logger)
     (connectToBot)
     (run-scenario master-scenario-1 "master-scenario-1" [])
-    (run-scenario scenario-3 "scenario-3" [])))
+    (run-scenario scenario-3 "scenario-3" []))
+
+(deftest ^:unit-tests concurrnecy-test-1
+  (init
+      {:name "boteval-self-test"
+       :owner "matan"}
+       driver default-logger)
+  (connectToBot)
+  (require '[clojure.java.io :as io])
+  (println "test1 running")
+  (letfn [(single-message-runner [message]
+    (sendToBot (openBotSession) message))]
+      (let [paraphrases (clojure.string/split-lines (slurp (clojure.java.io/file (clojure.java.io/resource "samples/paraphrases.txt"))))
+            run-scenario-for-phrase (fn [text] (run-scenario single-message-runner "phrase" text))]
+        (println (first paraphrases))
+        (doall (pmap run-scenario-for-phrase paraphrases)))))
+

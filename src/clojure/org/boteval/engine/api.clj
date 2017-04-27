@@ -75,13 +75,13 @@
       (. driver getReceived session-id))
 
     ;; the function that runs a scenario
-    (defn run-scenario [fn scenario-name params]
+    (defn run-scenario [fn scenario-name fn-params]
       (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time))]
         (println scenario-name "starting")
         (binding [scenario-execution-hierarchy
            (conj scenario-execution-hierarchy {:scenario-name scenario-name :scenario-execution-id scenario-execution-id})]
                (println scenario-execution-hierarchy)
-               (fn params))
+               (fn fn-params))
         (println scenario-name "finished")
         (. logger log-scenario-execution-end scenario-execution-id (sql-time))))
 
