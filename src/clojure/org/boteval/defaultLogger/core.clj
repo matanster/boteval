@@ -14,7 +14,8 @@
   (:require [hikari-cp.core :refer :all])
   (:require [clojure.java.jdbc :as jdbc])
   (:require [honeysql.core :as sql])
-  (:require [honeysql.helpers :refer :all]))
+  (:require [honeysql.helpers :refer :all])
+  (:use [org.boteval.self-logging]))
 
 (load "core_db_util")
 (load "core_getScenarioId")
@@ -39,7 +40,7 @@
               project-id
 
               (do
-                (println "registering an id for the project")
+                (self-log "registering an id for the project")
                 (first (db-execute
                   (-> (insert-into :projects)
                       (values [{:name name
@@ -48,7 +49,7 @@
                                 ;:git_hash project-git-hash
                                 }])))))))
 
-        (println "project id is" project-id)
+        (self-log "project id is " project-id)
 
         (def project-git-hash project-git-hash))
 

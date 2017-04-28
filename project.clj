@@ -18,17 +18,19 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
 
-                 [com.taoensso/timbre "4.10.0"] ; clojure logging
+                 [com.taoensso/timbre "4.10.0"]    ; clojure logging
 
-                 [clj-time "0.13.0"]        ; https://github.com/clj-time/clj-time
+                 [org.slf4j/slf4j-simple "1.7.25"] ; for the draining of sl4fj-reliant libraries used here
+
+                 [clj-time "0.13.0"]               ; https://github.com/clj-time/clj-time
 
                  ;; sql wrangling stack
-                 [honeysql "0.8.2"]         ; sort of a query builder
+                 [honeysql "0.8.2"]                     ; sort of a query builder
                  [mysql/mysql-connector-java "5.1.41"]  ; mysql jdbc driver
                  [org.clojure/java.jdbc "0.7.0-alpha3"] ; clojure jdbc, needed for the rest of them libraries
-                 [hikari-cp "1.7.5"]]       ; jdbc connection pooling, if we really need it (https://github.com/tomekw/hikari-cp)
+                 [hikari-cp "1.7.5"]]                   ; jdbc connection pooling, if we really need it (https://github.com/tomekw/hikari-cp)
 
-                 ; [io.aviso/pretty "0.1.33"] ; pretty exceptions in leinigen, we now use ultra instead
+                 ; [io.aviso/pretty "0.1.33"] ; pretty exceptions in leinigen, currently trying out ultra instead
 
   :plugins [;[io.aviso/pretty "0.1.33"] we now use ultra instead
             [venantius/ultra "0.5.1"]

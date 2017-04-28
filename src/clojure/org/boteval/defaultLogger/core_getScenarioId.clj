@@ -6,7 +6,8 @@
   (:require [hikari-cp.core :refer :all])
   (:require [clojure.java.jdbc :as jdbc])
   (:require [honeysql.core :as sql])
-  (:require [honeysql.helpers :refer :all]))
+  (:require [honeysql.helpers :refer :all])
+  (:use [org.boteval.self-logging]))
 
 (def ^:private index-mirror (atom (sorted-map)))
 
@@ -24,7 +25,7 @@
 
       (do
         ; add to the database, get the auto-incremented key, and update the index mirror with it
-        (println "adding scenario " scenario-name "to database")
+        (self-log "adding scenario " scenario-name "to database")
         (let [scenario-id
            (insert-and-get-id :scenarios {:name scenario-name :project_id project-id})]
 

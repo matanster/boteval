@@ -6,7 +6,8 @@
   (:require [hikari-cp.core :refer :all])
   (:require [clojure.java.jdbc :as jdbc])
   (:require [honeysql.core :as sql])
-  (:require [honeysql.helpers :refer :all]))
+  (:require [honeysql.helpers :refer :all])
+  (:use [org.boteval.self-logging]))
 
 ;; a hikari connection pool definition
 ;; (may optimize for performance following https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)
@@ -22,7 +23,7 @@
 (defn ^:private db-execute
   ([honey-sql-map]
      (jdbc/with-db-connection [connection {:datasource datasource}]
-        (println honey-sql-map)
+        (self-log honey-sql-map)
         (db-execute connection honey-sql-map)))
 
   ([connection honey-sql-map]
@@ -33,7 +34,7 @@
 (defn ^:private insert-and-get-id
   [table-name row-map]
   {:pre (map? row-map)}
-    (println (-> (insert-into table-name) (values [row-map]) sql/format))
+    (self-log (-> (insert-into table-name) (values [row-map]) sql/format))
     (let [honey-sql (-> (insert-into table-name) (values [row-map]) sql/format)]
        (jdbc/with-db-connection [connection {:datasource datasource}]
          (jdbc/execute! connection honey-sql)

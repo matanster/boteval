@@ -3,16 +3,14 @@
 
 (ns boteval.datastore-clean
   (:require [clojure.java.shell])
-  (:use [taoensso.timbre :only (info) :rename {info self-log}]))
+  (:use org.boteval.self-logging))
 
 (defn datastore-clean []
   (self-log "clearing the logger's datastore...")
   (let [result (clojure.java.shell/sh "bash" "-c" "mysql -u root boteval < resources/deploy/mysql.sql")]
-    (if (= (:exit result) 0)
-      true
+    (if-not (= (:exit result) 0)
       (do
-        (println "running the database reinit mysql script returned exit code" (:exit result))
-        (println "stdout:" (:out result))
-        (println "stderr:" (:err result))
-        false))))
-
+        (self-log "running the database reinit mysql script returned exit code " (:exit result))
+        (self-log "stdout: " (:out result))
+        (self-log "stderr: " (:err result))
+        (throw (Exception. (:err result)))))))
