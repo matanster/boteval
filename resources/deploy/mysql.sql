@@ -1,16 +1,15 @@
 /*
  * database schema and user creation
- * run this inside `mysql -u root', by issuing there the command `source resources/deploy/mysql.sql`
+ * run this inside `mysql -u root', by issuing there the command: source resources/deploy/mysql.sql
  */
-
 
 /* schema and user */
 
+SET @schemaName="boteval";
+SET @text = CONCAT('DROP SCHEMA ', @schemaName); PREPARE stmt FROM @text; EXECUTE stmt; /* previously DROP SCHEMA `boteval` */
+SET @text = CONCAT('CREATE SCHEMA ', @schemaName, ' DEFAULT CHARACTER SET utf8'); PREPARE stmt FROM @text; EXECUTE stmt; /* previously CREATE SCHEMA `boteval` DEFAULT CHARACTER SET utf8 */
+
 DROP USER 'boteval'@'localhost';
-DROP SCHEMA `boteval`;
-
-CREATE SCHEMA `boteval` DEFAULT CHARACTER SET utf8;
-
 CREATE USER 'boteval'@'localhost' IDENTIFIED BY 'boteval234%^&';
 GRANT ALL ON boteval . * TO 'boteval'@'localhost';
 FLUSH PRIVILEGES;

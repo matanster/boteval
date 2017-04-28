@@ -12,11 +12,13 @@
   :test-paths ["test" "src/clojure"] ; for picking up unit tests from regular source files not only the tests directory
 
   :test-selectors {:default (complement :unit) ; https://github.com/technomancy/leiningen/blob/983847276d12fcdac7a5b5eabbd5dfcb926087d7/src/leiningen/test.clj#L172
-                   :unit :unit-tests
-                   :samples :samples
+                   :unit :unit-tests ; real tests of the library
+                   :samples :samples ; sample scenarios and evaluators
                    :all (constantly true)}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
+
+                 [com.taoensso/timbre "4.10.0"] ; clojure logging
 
                  [clj-time "0.13.0"]        ; https://github.com/clj-time/clj-time
 
@@ -31,8 +33,8 @@
   :plugins [;[io.aviso/pretty "0.1.33"] we now use ultra instead
             [venantius/ultra "0.5.1"]
             [lein-codox "0.10.3"]
-            [lein-auto "0.1.3"] ; provides the auto lein command for watching source changes
-            [test2junit "1.2.6"]]
+            [lein-auto "0.1.3"]   ; provides the auto lein command for watching source changes
+            [test2junit "1.2.6"]] ; push test results into junit xml format (or sucky html reports) https://github.com/ruedigergad/test2junit
 
   ; this doesn't work yet ― see https://github.com/weavejester/lein-auto/issues/6
   ; :auto {:default {:paths (:source-paths :java-source-paths :test-paths :java-source-paths "my path")}} ; https://github.com/weavejester/lein-auto#usage
