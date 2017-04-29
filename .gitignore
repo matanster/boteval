@@ -12,6 +12,6 @@ pom.xml.asc
 
 /logs
 
-# for the lein test2junit plugin
+# lein test2junit plugin artifacts
 build.xml
 test2junit/

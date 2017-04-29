@@ -90,3 +90,7 @@
     (shutdown [this]
       (close-datasource datasource))))
 
+(defn get-from-db [honey-sql-map]
+   (let [sql-statement (sql/format honey-sql-map)]
+      (jdbc/with-db-connection [connection {:datasource datasource}]
+         (jdbc/query connection sql-statement))))

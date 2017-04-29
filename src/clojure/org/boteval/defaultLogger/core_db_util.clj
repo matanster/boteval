@@ -35,7 +35,15 @@
   [table-name row-map]
   {:pre (map? row-map)}
     (self-log (-> (insert-into table-name) (values [row-map]) sql/format))
-    (let [honey-sql (-> (insert-into table-name) (values [row-map]) sql/format)]
-       (jdbc/with-db-connection [connection {:datasource datasource}]
-         (jdbc/execute! connection honey-sql)
-         (:id (first (jdbc/query connection "select last_insert_id() id")))))) ;this is mysql specific
+    (let [honey-sql (-> (insert-into table-name) (values [row-map]) sql/format)
+          new-id
+            (jdbc/with-db-connection [connection {:datasource datasource}]
+               (jdbc/execute! connection honey-sql)
+                 (:id (first (jdbc/query connection "select last_insert_id() id"))))] ; this is mysql specific
+
+           (self-log "new scenario id " new-id)
+           new-id))
+
+
+
+

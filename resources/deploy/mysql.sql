@@ -42,8 +42,8 @@ CREATE TABLE `boteval`.`scenario_executions` (
 CREATE TABLE `boteval`.`scenarios` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `name` CHAR(128) NOT NULL,
-  `description` VARCHAR(2048) NULL,
   `project_id` INT NOT NULL COMMENT 'the project this scenario belongs to',
+  UNIQUE KEY `unique_key` (`name`, `project_id`),
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` DESC));
 
@@ -54,6 +54,7 @@ CREATE TABLE `boteval`.`projects` (
   `version_name` CHAR(64) NULL COMMENT 'optionally further identifying a project',
   /* `git_hash` CHAR(64) NOT NULL, */
   `id` INT NOT NULL AUTO_INCREMENT,
+  UNIQUE KEY `unique_key` (`name`, `owner`, `version_name`),
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` DESC));
 

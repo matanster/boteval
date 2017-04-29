@@ -1,6 +1,6 @@
 ;;; some sample scenarios
 
-(ns boteval.test-scenarios
+(ns boteval.sample-scenarios
   (:use [org.boteval.engine.api]))
 
 (defn scenario-1 [session-id]
