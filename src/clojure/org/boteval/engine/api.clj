@@ -7,13 +7,14 @@
   (:use [org.boteval.time])
   (:use [org.boteval.self])
   (:use [org.boteval.self-logging])
+  #_(:require [clojure.repl]) ; for demunge if we'll need it after all
   (:gen-class))
 
 
 (defn init
   " initializes the api functions to use the given driver and logger
     todo: this is not concurrency-safe, one init will overwrite the other.
-    todo: consider using partial functions rather a closure, in later refactoring "
+    todo: consider a design providing the api not through `defn` per api endpoint (?) "
   [project-meta driver logger]
   {:pre [(contains? project-meta :name)
          (contains? project-meta :owner)
@@ -56,8 +57,7 @@
     (defn getReceived [session-id]
       (. driver getReceived session-id))
 
-
-    (defn run-scenario [fn scenario-name fn-params]
+    (defn ^:private run-scenario-impl [fn scenario-name fn-params]
       " this is the function that runs a scenario
         a scenario should always be run through this function, other than during its development "
       (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time))]
@@ -69,3 +69,9 @@
 
     nil
 )
+
+(defn clean-fn-name [fn-name]
+  (clojure.string/replace (clojure.string/replace fn-name #"@(.*)" "") "$" "/"))
+
+(defmacro run-scenario [fn-name fn-params]
+   (list 'run-scenario-impl fn-name (list 'clean-fn-name (list 'str fn-name)) fn-params))

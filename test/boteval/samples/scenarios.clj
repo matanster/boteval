@@ -17,6 +17,6 @@
 
 (defn master-scenario-1 [_]
   (let [session-id (openBotSession)]
-    (run-scenario scenario-1 "scenario-1" session-id)
-    (run-scenario scenario-2 "scenario-2" session-id)
+    (run-scenario scenario-1 session-id)
+    (run-scenario scenario-2 session-id)
     #_(println session-id "received " (getReceived session-id))))

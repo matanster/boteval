@@ -15,5 +15,6 @@
        :owner "matan"}
        driver default-logger)
     (connectToBot)
-    (run-scenario master-scenario-1 "master-scenario-1" [])
-    (run-scenario scenario-3 "scenario-3" []))
+    (run-scenario master-scenario-1 [])
+    (run-scenario scenario-3 []))
+

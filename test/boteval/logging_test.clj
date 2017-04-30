@@ -36,7 +36,7 @@
 
   (let [phrases ["Hi, good morning" "Hi good morning" "hi good morning"] ; (clojure.string/split-lines (slurp (io/file (io/resource "samples/paraphrases.txt"))))
         single-message-runner (fn [message] (sendToBot (openBotSession) message))
-        run-scenario-for-phrase (fn [text] (run-scenario single-message-runner "phrase" text))
+        run-scenario-for-phrase (fn [text] (run-scenario single-message-runner text))
         concurrency 5]
 
       (dotimes [i concurrency]
