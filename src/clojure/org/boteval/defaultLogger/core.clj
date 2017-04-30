@@ -20,6 +20,7 @@
 (load "core_db_util")
 (load "core_getScenarioId")
 
+
 (def default-logger (reify Logger
 
    ;; init method
@@ -30,7 +31,9 @@
              (some? project-git-hash)]}
 
         (def project-id
-          "the get-or-create-id in/from the database dance, for our project name and owner"
+          "the get-or-create-id in/from the database dance, for our project name and owner
+           todo: make concurrency-friendly same as in getting a scenario id, possibly by
+                 making them share a common core"
           (if-let [project-id
             (:id (first
               (let [sql-statement (-> (select :id) (from :projects) (where [:= :name name] [:= :owner owner]) sql/format)]
@@ -89,6 +92,7 @@
     ;; shutdown method
     (shutdown [this]
       (close-datasource datasource))))
+
 
 (defn get-from-db [honey-sql-map]
    (let [sql-statement (sql/format honey-sql-map)]

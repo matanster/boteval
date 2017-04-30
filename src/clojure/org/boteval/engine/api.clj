@@ -1,6 +1,7 @@
-;; weaving a bot-specific driver into the runtime context
-
 (ns org.boteval.engine.api
+
+  " the api to be used by user code "
+
   (:require [org.boteval.driverInterface :refer [Driver]]) ; the driver interface
   (:require [org.boteval.loggerInterface :refer [Logger]]) ; the logger interface
   (:use [org.boteval.time])
@@ -8,13 +9,18 @@
   (:use [org.boteval.self-logging])
   (:gen-class))
 
-;; function that initializes the api with a driver and logger
+
 (defn init
+  " initializes the api functions to use the given driver and logger
+    todo: this is not concurrency-safe, one init will overwrite the other.
+    todo: consider using partial functions rather a closure, in later refactoring "
   [project-meta driver logger]
   {:pre [(contains? project-meta :name)
          (contains? project-meta :owner)
          (satisfies? Driver driver)
          (satisfies? Logger logger)]}
+
+    (self-log "api initializing with given driver and logger")
 
     (. logger init (assoc project-meta :project-git-hash self-git-hash))
 
@@ -50,15 +56,15 @@
     (defn getReceived [session-id]
       (. driver getReceived session-id))
 
-    ;; the function that runs a scenario
+
     (defn run-scenario [fn scenario-name fn-params]
+      " this is the function that runs a scenario
+        a scenario should always be run through this function, other than during its development "
       (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time))]
-        (self-log scenario-name " starting")
         (binding [scenario-execution-hierarchy
            (conj scenario-execution-hierarchy {:scenario-name scenario-name :scenario-execution-id scenario-execution-id})]
-               (self-log scenario-execution-hierarchy)
+               #_(self-log scenario-execution-hierarchy)
                (fn fn-params))
-        (self-log scenario-name " finished")
         (. logger log-scenario-execution-end scenario-execution-id (sql-time))))
 
     nil

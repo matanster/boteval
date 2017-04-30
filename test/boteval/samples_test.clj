@@ -1,12 +1,12 @@
-;; currently runs the clojure samples, not testing the framework's own code
+(ns boteval.samples-test
 
-(ns boteval.core-test
+  " runs the clojure samples, as that it only tests that they do not throw "
+
   (:require [clojure.test :refer :all])
   (:use [org.boteval.engine.api]
         [boteval.dumbot.driver]
         [org.boteval.defaultLogger.core]
-        [boteval.sample-scenarios]
-        [boteval.sampleEvaluators.evaluator]
+        [boteval.samples.scenarios]
         [boteval.datastore-clean]))
 
 (deftest ^:samples run
