@@ -15,7 +15,8 @@
   (:require [clojure.java.jdbc :as jdbc])
   (:require [honeysql.core :as sql])
   (:require [honeysql.helpers :refer :all])
-  (:use [org.boteval.self-logging]))
+  (:use [org.boteval.self-logging])
+  (:require [cheshire.core :as json]))
 
 (load "core_db_util")
 (load "core_getScenarioId")
@@ -70,7 +71,8 @@
 
     ;; scenario execution start method
     (log-scenario-execution-start
-      [this scenario-name scenario-execution-hierarchy start-time]
+      [this scenario-name scenario-execution-hierarchy start-time parameters]
+      {:pre (map? parameters) }
 
       (let [scenario-id (get-scenario-id project-id scenario-name)]
         (let [parent-scenario-execution-id (:scenario-execution-id (first scenario-execution-hierarchy))]
@@ -79,7 +81,8 @@
              {:scenario_id scenario-id
               :parent_id parent-scenario-execution-id
               :started start-time
-              :ended nil}))))
+              :ended nil
+              :parameters (json/generate-string parameters)}))))
 
     ;; scenario execution end method
     (log-scenario-execution-end
@@ -96,5 +99,6 @@
 
 (defn get-from-db [honey-sql-map]
    (let [sql-statement (sql/format honey-sql-map)]
+      #_(println sql-statement)
       (jdbc/with-db-connection [connection {:datasource datasource}]
          (jdbc/query connection sql-statement))))

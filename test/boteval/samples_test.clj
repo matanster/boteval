@@ -13,7 +13,8 @@
     (init
       {:name "boteval-self-test"
        :owner "matan"}
-       driver default-logger)
+      driver
+      default-logger)
     (connectToBot)
     (run-scenario master-scenario-1 [])
     (run-scenario scenario-3 []))

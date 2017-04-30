@@ -7,6 +7,7 @@
   (:use [org.boteval.time])
   (:use [org.boteval.self])
   (:use [org.boteval.self-logging])
+  (:require [cheshire.core :as json])
   #_(:require [clojure.repl]) ; for demunge if we'll need it after all
   (:gen-class))
 
@@ -58,9 +59,10 @@
       (. driver getReceived session-id))
 
     (defn ^:private run-scenario-impl [fn scenario-name fn-params]
+      {:pre (map? fn-params) }
       " this is the function that runs a scenario
         a scenario should always be run through this function, other than during its development "
-      (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time))]
+      (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time) fn-params)]
         (binding [scenario-execution-hierarchy
            (conj scenario-execution-hierarchy {:scenario-name scenario-name :scenario-execution-id scenario-execution-id})]
                #_(self-log scenario-execution-hierarchy)
@@ -71,7 +73,17 @@
 )
 
 (defn clean-fn-name [fn-name]
+  " returns a fully qualified function name, from a runtime representation of one with dollars and stuff "
   (clojure.string/replace (clojure.string/replace fn-name #"@(.*)" "") "$" "/"))
 
 (defmacro run-scenario [fn-name fn-params]
+  " automatically passes the function's full name as the scenario name "
    (list 'run-scenario-impl fn-name (list 'clean-fn-name (list 'str fn-name)) fn-params))
+
+; a started attempt on a macro for defining scenario functions, that would automatically add
+; a first argument (named context) to them and hinge metadata on them. abandoned for now.
+; (see http://stackoverflow.com/a/989482/1509695 for how to correctly add metadata)
+#_(defmacro def-scenario [given-name params body]
+  " defines a scenario function for the given name, params and body"
+  (list 'defn ^{:scenario-name given-name} given-name (vec ['context params]) body))
+

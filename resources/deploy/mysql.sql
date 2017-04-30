@@ -35,6 +35,7 @@ CREATE TABLE `boteval`.`scenario_executions` (
   `parent_id` BIGINT NULL COMMENT 'execution id of parent executor (null would mean no parent, i.e. a top level execution)',
   `started` DATETIME(6) NOT NULL,
   `ended` DATETIME(6) NULL COMMENT 'can be null while the execution has not yet ended',
+  `parameters` JSON COMMENT 'parameters given to the scenario',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` DESC));
 

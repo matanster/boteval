@@ -28,7 +28,9 @@
                  [honeysql "0.8.2"]                     ; sort of a query builder
                  [mysql/mysql-connector-java "5.1.41"]  ; mysql jdbc driver
                  [org.clojure/java.jdbc "0.7.0-alpha3"] ; clojure jdbc, needed for the rest of them libraries
-                 [hikari-cp "1.7.5"]]                   ; jdbc connection pooling, if we really need it (https://github.com/tomekw/hikari-cp)
+                 [hikari-cp "1.7.5"]                    ; jdbc connection pooling, if we really need it (https://github.com/tomekw/hikari-cp)
+
+                 [cheshire "5.7.1"]]                    ; for working with json
 
                  ; [io.aviso/pretty "0.1.33"] ; pretty exceptions in leinigen, currently trying out ultra instead
 

@@ -31,7 +31,8 @@
   (init
       {:name "boteval-self-test"
        :owner "matan"}
-       driver logger/default-logger)
+       driver
+       logger/default-logger)
   (connectToBot)
 
   (let [phrases ["Hi, good morning" "Hi good morning" "hi good morning"] ; (clojure.string/split-lines (slurp (io/file (io/resource "samples/paraphrases.txt"))))
