@@ -1,4 +1,7 @@
 (ns boteval.samples.evaluator
+
+  " a sample evaluator, which is also part of our test suite "
+
   (:require [boteval.dumbot.core])
   (:use     [boteval.dumbot.driver])
   (:use     [org.boteval.engine.api])
@@ -10,6 +13,7 @@
   (:require [honeysql.core :as sql])
   (:require [honeysql.helpers :refer :all])
   (:require [clojure.test :refer :all]))
+
 
 (defn ^:private test-scenario [_]
   " just a scenario for our test "
@@ -30,6 +34,9 @@
 
 
 (deftest ^:self evaluators
+  " tests part of the valuators api
+    TODO: make into a database coordinated test that verifies
+          get-latest-scenario-execution-or-execute works in both its cases "
 
   (datastore-clean)
 
