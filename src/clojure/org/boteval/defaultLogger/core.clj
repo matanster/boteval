@@ -26,9 +26,9 @@
 
    ;; init method
    (init
-      [this {:keys [name version owner project-git-hash]}]
-      {:pre [(some? name)
-             (some? owner)
+      [this {:keys [project-name version project-owner project-git-hash]}]
+      {:pre [(some? project-name)
+             (some? project-owner)
              (some? project-git-hash)]}
 
         (def project-id
@@ -37,7 +37,7 @@
                  making them share a common core"
           (if-let [project-id
             (:id (first
-              (let [sql-statement (-> (select :id) (from :projects) (where [:= :name name] [:= :owner owner]) sql/format)]
+              (let [sql-statement (-> (select :id) (from :projects) (where [:= :name project-name] [:= :owner project-owner]) sql/format)]
                 (jdbc/with-db-connection [connection {:datasource datasource}]
                    (jdbc/query connection sql-statement)))))]
 
@@ -47,8 +47,8 @@
                 (self-log "registering an id for the project")
                 (first (db-execute
                   (-> (insert-into :projects)
-                      (values [{:name name
-                                :owner owner
+                      (values [{:name project-name
+                                :owner project-owner
                                 :version_name nil ; later make this an optional argument
                                 ;:git_hash project-git-hash
                                 }])))))))

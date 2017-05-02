@@ -4,6 +4,7 @@
     assumes that no other tests concurrently run "
 
   (:require [clojure.test :refer :all])
+  (:require [org.boteval.self :as self])
   (:use [org.boteval.engine.api]
         [boteval.dumbot.driver]
         [boteval.samples.scenarios]
@@ -11,17 +12,18 @@
   (:require [clojure.java.io :as io])
   (:require [org.boteval.defaultLogger.core :as logger])
   (:require [honeysql.core :as sql])
-  (:require [honeysql.helpers :refer :all]))
+  (:require [honeysql.helpers :refer :all])
+  (:use [org.boteval.util]))
 
 
 (defn ^:private get-logged-executions []
-  (logger/get-from-db (-> (select :scenario_id :id :parent_id) (from :scenario_executions))))
+  (. logger/default-logger get-from-db (-> (select :scenario_id :id :parent_id) (from :scenario_executions))))
 
 (defn ^:private get-logged-scenarios []
-  (logger/get-from-db (-> (select :id) (from :scenarios))))
+  (. logger/default-logger get-from-db (-> (select :id) (from :scenarios))))
 
 (defn ^:private get-logged-exchanges []
-  (logger/get-from-db (-> (select :text :scenario_execution_id) (from :exchanges))))
+  (. logger/default-logger get-from-db (-> (select :text :scenario_execution_id) (from :exchanges))))
 
 
 (deftest ^:self logging-under-concurrency
@@ -29,10 +31,10 @@
   (datastore-clean)
 
   (init
-      {:name "boteval-self-test"
-       :owner "matan"}
+       self/unique-key
        driver
        logger/default-logger)
+
   (connectToBot)
 
   (let [phrases ["Hi, good morning" "Hi good morning" "hi good morning"] ; (clojure.string/split-lines (slurp (io/file (io/resource "samples/paraphrases.txt"))))

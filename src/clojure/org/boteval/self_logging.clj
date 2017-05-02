@@ -1,7 +1,7 @@
 (ns org.boteval.self-logging
   #_(:use [taoensso.timbre :only (handle-uncaught-jvm-exceptions! info) :rename {info self-log}])
   (:use [taoensso.timbre])
-  (:use [org.boteval.self]))
+  (:require [org.boteval.self :as self]))
 
 (let [log-file-name "logs/self/log.log"]
   (set-config! {:level :trace :appenders {:spit (spit-appender {:fname log-file-name :append? true})}}) ;https://github.com/ptaoussanis/timbre/issues/228
@@ -13,7 +13,7 @@
   (info (apply str message)))
 
 ; log starting up when this namespace is first loaded
-(self-log "starting up.. self-hash is " self-git-hash)
+(self-log "starting up.. self-hash is " self/project-git-hash)
 
 
 ;
