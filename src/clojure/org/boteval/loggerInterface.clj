@@ -11,4 +11,6 @@
 
   (log [_ scenario-hierarchy message-record])
 
+  (get-from-db [_ honey-sql-map]) ; TODO: rename more neutrally
+
   (shutdown [_]))

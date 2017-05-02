@@ -94,11 +94,11 @@
 
     ;; shutdown method
     (shutdown [this]
-      (close-datasource datasource))))
+      (close-datasource datasource))
 
 
-(defn get-from-db [honey-sql-map]
-   (let [sql-statement (sql/format honey-sql-map)]
-      #_(println sql-statement)
-      (jdbc/with-db-connection [connection {:datasource datasource}]
-         (jdbc/query connection sql-statement))))
+    (get-from-db [this honey-sql-map]
+       (let [sql-statement (sql/format honey-sql-map)]
+          (println sql-statement)
+          (jdbc/with-db-connection [connection {:datasource datasource}]
+             (jdbc/query connection sql-statement))))))

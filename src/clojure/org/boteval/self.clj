@@ -13,3 +13,7 @@
       (= exit-code 0)
       (str/trimr git-hash)
       (throw (Exception. "failed to get self git hash ― are you running the framework without git installed?")))))
+
+(def self
+   {:name  "boteval-self-test"
+    :owner "matan"})

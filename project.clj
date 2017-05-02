@@ -45,7 +45,7 @@
 
   :codox {:metadata {:doc/format :markdown}} ; treat docstrings as codox extended markdown (https://github.com/weavejester/codox/blob/master/example/src/clojure/codox/markdown.clj)
 
-  :aot [org.boteval.engine.api]
+  :aot [org.boteval.engine.api org.boteval.engine.evaluator-api]
   :profiles {:java-tests-compile
     {:java-source-paths ["src/java-test"]}}
   :aliases {

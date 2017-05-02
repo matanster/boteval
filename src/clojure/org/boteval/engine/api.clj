@@ -1,6 +1,6 @@
 (ns org.boteval.engine.api
 
-  " the api to be used by user code "
+  " api to be used by user code "
 
   (:require [org.boteval.driverInterface :refer [Driver]]) ; the driver interface
   (:require [org.boteval.loggerInterface :refer [Logger]]) ; the logger interface
@@ -59,26 +59,26 @@
       (. driver getReceived session-id))
 
     (defn ^:private run-scenario-impl [fn scenario-name fn-params]
-      {:pre (map? fn-params) }
-      " this is the function that runs a scenario
+      {:pre (map? fn-params)
+       :post (number? %)}
+
+      " this is the function that runs a scenario, returning its logger assigned execution id
         a scenario should always be run through this function, other than during its development "
       (let [scenario-execution-id (. logger log-scenario-execution-start scenario-name scenario-execution-hierarchy (sql-time) fn-params)]
         (binding [scenario-execution-hierarchy
            (conj scenario-execution-hierarchy {:scenario-name scenario-name :scenario-execution-id scenario-execution-id})]
                #_(self-log scenario-execution-hierarchy)
                (fn fn-params))
-        (. logger log-scenario-execution-end scenario-execution-id (sql-time))))
+        (. logger log-scenario-execution-end scenario-execution-id (sql-time))
+
+        scenario-execution-id))
 
     nil
 )
 
-(defn clean-fn-name [fn-name]
-  " returns a fully qualified function name, from a runtime representation of one with dollars and stuff "
-  (clojure.string/replace (clojure.string/replace fn-name #"@(.*)" "") "$" "/"))
-
 (defmacro run-scenario [fn-name fn-params]
   " automatically passes the function's full name as the scenario name "
-   (list 'run-scenario-impl fn-name (list 'clean-fn-name (list 'str fn-name)) fn-params))
+   (list 'run-scenario-impl fn-name (list 'clean-fn-name fn-name) fn-params))
 
 ; a started attempt on a macro for defining scenario functions, that would automatically add
 ; a first argument (named context) to them and hinge metadata on them. abandoned for now.
